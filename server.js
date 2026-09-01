@@ -32,8 +32,8 @@ const DATA_FILE = path.join(__dirname, 'data', 'books.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 /// Global boolean flags controlling automated book generation & concurrency lock
-// Default is false (generation stopped). Can be enabled via AUTO_GENERATE=true or /api/resume
-let isGenerating = process.env.AUTO_GENERATE === 'true';
+// Enabled by default. Can be paused via AUTO_GENERATE=false or /api/pause
+let isGenerating = process.env.AUTO_GENERATE !== 'false';
 let isCurrentlyExecuting = false;
 
 // Ensure data directory and data/books.json exist and initialize to [] if empty
