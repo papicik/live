@@ -93,7 +93,7 @@ button {
 .grand-bookcase {
   flex: 1;
   display: flex;
-  padding: 18px 20px 4px 20px;
+  padding: 68px 22px 18px 22px;
   gap: 16px;
   overflow: hidden;
   position: relative;
@@ -1389,7 +1389,7 @@ button {
    ========================================================================== */
 .top-right-actions {
   position: fixed;
-  top: 18px;
+  top: 14px;
   right: 22px;
   z-index: 500;
   display: flex;
@@ -1465,7 +1465,7 @@ button {
    ========================================================================== */
 .ca-top-badge {
   position: fixed;
-  top: 18px;
+  top: 14px;
   left: 22px;
   z-index: 500;
   display: inline-flex;
