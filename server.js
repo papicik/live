@@ -32,8 +32,8 @@ const DATA_FILE = path.join(__dirname, 'data', 'books.json');
 const PUBLIC_DIR = path.join(__dirname, 'public');
 
 /// Global boolean flags controlling automated book generation & concurrency lock
-// Enabled by default. Can be paused via AUTO_GENERATE=false or /api/pause
-let isGenerating = process.env.AUTO_GENERATE !== 'false';
+// Complete site shutdown / lockdown mode
+let isGenerating = false;
 let isCurrentlyExecuting = false;
 
 // Ensure data directory and data/books.json exist and initialize to [] if empty
@@ -45,15 +45,52 @@ if (!fs.existsSync(DATA_FILE) || fs.readFileSync(DATA_FILE, 'utf-8').trim() === 
   fs.writeFileSync(DATA_FILE, '[]', 'utf-8');
 }
 
-// Middlewares
-app.use(express.json());
-app.use(express.static(PUBLIC_DIR));
-
-// CORS headers
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
+// Complete Lockdown / Offline Handler (Blocks all visitors immediately)
+app.use((req, res) => {
+  res.status(503).send(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline • Library Closed</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #020806;
+      color: #dfba53;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .offline-card {
+      max-width: 440px;
+      width: 100%;
+      background: rgba(6, 22, 17, 0.92);
+      border: 1.5px solid rgba(223, 186, 83, 0.35);
+      border-radius: 16px;
+      padding: 48px 28px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+    }
+    .icon { font-size: 42px; margin-bottom: 16px; }
+    h1 { font-size: 1.4rem; font-weight: 700; color: #f7e099; margin: 0 0 10px 0; letter-spacing: 0.5px; }
+    p { color: #8fa39b; font-size: 0.95rem; line-height: 1.6; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="offline-card">
+    <div class="icon">🔒</div>
+    <h1>Service Offline</h1>
+    <p>The library is currently closed and unavailable to visitors.</p>
+  </div>
+</body>
+</html>
+  `);
 });
 
 /**
