@@ -211,7 +211,7 @@ app.get('/', (req, res) => {
 });
 
 // Launch server & autonomous 1-minute sequential generator loop
-const server = app.listen(PORT, async () => {
+const server = app.listen(PORT, '0.0.0.0', async () => {
   console.log(`=============================================================`);
   console.log(`🏛 Grand Library Server & Literary Pipeline Online`);
   console.log(`   Web Interface: http://localhost:${PORT}`);
